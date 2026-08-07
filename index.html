@@ -1,0 +1,3478 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahmed Shakoor | Full Stack Developer</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* === CSS VARIABLES === */
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-2: #1a1a28;
+      --surface-3: #1e1e30;
+      --text: #e8e8f0;
+      --text-dim: #8a8aa0;
+      --text-muted: #5a5a70;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --accent-2: #ec4899;
+      --accent-3: #06b6d4;
+      --accent-4: #22c55e;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(99, 102, 241, 0.3);
+      --shadow: rgba(0, 0, 0, 0.4);
+      --grid: rgba(99, 102, 241, 0.03);
+      --loader-bg: #0a0a0f;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --surface-2: #f0f1f5;
+      --surface-3: #e8e9ef;
+      --text: #1a1a2e;
+      --text-dim: #5a5a70;
+      --text-muted: #8a8aa0;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --accent-2: #ec4899;
+      --accent-3: #06b6d4;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(99, 102, 241, 0.4);
+      --shadow: rgba(0, 0, 0, 0.08);
+      --grid: rgba(99, 102, 241, 0.04);
+      --loader-bg: #f8f9fc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition:
+        background 0.5s ease,
+        color 0.5s ease;
+    }
+
+    .font-mono {
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface-2);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    #hero-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    :root {
+      --navbar-height: 88px;
+    }
+
+    @media (max-width: 1023.98px) {
+      :root {
+        --navbar-height: 72px;
+      }
+    }
+
+    .nav-glass {
+      background: rgba(var(--bg-rgb, 10, 10, 15), 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition:
+        background 0.5s ease,
+        border-color 0.5s ease;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    [data-theme="light"] .nav-glass {
+      background: rgba(248, 249, 252, 0.9);
+    }
+
+    /* Responsive navbar */
+    @media (max-width: 1023.98px) {
+      .nav-glass {
+        padding: 0.75rem 0;
+      }
+
+      .nav-glass .max-w-7xl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .hero-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      padding-top: 5px;
+      padding-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding-top: 100px;
+        min-height: auto;
+        padding-bottom: 60px;
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 10vw, 3.5rem) !important;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem !important;
+        padding: 0 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding-top: 120px;
+      }
+
+      .hero-title {
+        font-size: 2rem !important;
+      }
+
+      .hero-subtitle {
+        font-size: 0.9rem !important;
+      }
+
+      .cta-btn,
+      .outline-btn,
+      .resume-btn {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.875rem !important;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg,
+          var(--accent),
+          var(--accent-2),
+          var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-dim);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .cta-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      text-decoration: none;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+    }
+
+    .cta-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .cta-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .outline-btn {
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+
+    .outline-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: bounce 2s infinite;
+    }
+
+    @media (max-width: 768px) {
+      .scroll-indicator {
+        bottom: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .scroll-indicator {
+        display: none;
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      40% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      60% {
+        transform: translateX(-50%) translateY(-5px);
+      }
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .card-3d {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-3d::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+          transparent,
+          var(--accent),
+          transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .card-3d:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--border-hover);
+      box-shadow:
+        0 20px 60px var(--shadow),
+        0 0 40px var(--accent-glow);
+    }
+
+    .card-3d:hover::before {
+      opacity: 1;
+    }
+
+    /* === PROJECT CARDS - FIXED HOVER === */
+    .project-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .project-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 30px 80px var(--shadow);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .project-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+          rgba(10, 10, 15, 0.95) 0%,
+          rgba(10, 10, 15, 0.5) 50%,
+          rgba(10, 10, 15, 0.3) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover .project-overlay {
+      opacity: 1;
+    }
+
+    /* Bottom info - HIDE on hover */
+    .project-info {
+      padding: 1.25rem;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    .project-card:hover .project-info {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+    }
+
+    .skill-bar {
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom,
+          var(--accent),
+          var(--accent-2),
+          var(--accent-3));
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form-input.cf-invalid {
+      border-color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.12);
+    }
+
+    #cf-submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    #cf-submit-btn:disabled:hover {
+      transform: none;
+      box-shadow: 0 4px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    #cf-status.cf-success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: var(--text);
+    }
+
+    #cf-status.cf-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--text);
+    }
+
+    @keyframes cfSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      height: 100dvh;
+      min-height: 100svh;
+      background: var(--bg);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+      transform: translateY(-10px);
+      padding: calc(var(--navbar-height) + clamp(0.5rem, 2vh, 1.5rem)) clamp(1rem, 5vw, 2rem) clamp(1rem, 3vh, 2rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(0.5rem, 3vh, 1.5rem);
+      flex: 1;
+      min-height: 0;
+    }
+
+    .mobile-menu a {
+      font-size: clamp(1.25rem, 5vw, 2rem);
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+      padding: 0.6rem 1.5rem;
+      border-radius: 12px;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+      background: var(--accent-glow);
+      transform: translateX(5px);
+    }
+
+    .mobile-menu-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(0.5rem, 2vh, 1rem);
+      flex-shrink: 0;
+      padding-top: clamp(0.75rem, 3vh, 1.5rem);
+    }
+
+    .mobile-menu .resume-btn {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .mobile-menu a {
+        padding: 0.5rem 1rem;
+      }
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 44px;
+      height: 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 0;
+      z-index: 1001;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    .hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      margin: 3px 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(4px, 4px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(4px, -4px);
+    }
+
+    @media (max-width: 1023.98px) {
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .stat-number {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .testimonial-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      font-size: 6rem;
+      color: var(--accent);
+      opacity: 0.2;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .footer-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    .social-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .social-icon:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .project-card img {
+        height: 200px;
+      }
+
+      .section-title {
+        font-size: clamp(1.5rem, 6vw, 2.5rem) !important;
+      }
+
+      .card-3d {
+        padding: 1.5rem;
+      }
+
+      .project-card {
+        margin: 0 0.5rem;
+      }
+
+      .testimonial-card {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+      }
+
+      .timeline-line {
+        left: 15px;
+      }
+
+      .timeline-dot {
+        left: 10px;
+      }
+
+      #experience .pl-8 {
+        padding-left: 2.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .project-card img {
+        height: 160px;
+      }
+
+      .card-3d {
+        padding: 1rem;
+      }
+
+      .testimonial-card {
+        padding: 1rem;
+      }
+
+      .social-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
+
+      .form-input {
+        padding: 0.75rem 1rem;
+      }
+
+      footer .flex-col {
+        gap: 1rem;
+      }
+    }
+
+    /* === NEW LOADING SCREEN === */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--loader-bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-spinner {
+      position: relative;
+      width: 60px;
+      height: 60px;
+    }
+
+    .loader-ring {
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgba(99, 102, 241, 0.15);
+      border-radius: 50%;
+    }
+
+    .loader-ring-inner {
+      position: absolute;
+      inset: 0;
+      border: 3px solid transparent;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: loaderSpin 1s linear infinite;
+    }
+
+    .loader-spinner::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 3px solid transparent;
+      border-top-color: var(--accent-2);
+      border-radius: 50%;
+      animation: loaderSpin 1.5s linear infinite reverse;
+    }
+
+    .loader-progress {
+      width: 200px;
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loader-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 2px;
+      animation: loaderProgress 2s ease-in-out infinite;
+    }
+
+    .loader-text {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes loaderSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes loaderProgress {
+      0% {
+        width: 0%;
+        opacity: 1;
+      }
+
+      50% {
+        width: 100%;
+        opacity: 1;
+      }
+
+      100% {
+        width: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* === DARK/LIGHT TOGGLE === */
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .theme-toggle svg {
+      transition:
+        transform 0.5s ease,
+        opacity 0.3s ease;
+    }
+
+    .theme-toggle .sun-icon {
+      position: absolute;
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+    }
+
+    .theme-toggle .moon-icon {
+      position: absolute;
+      opacity: 1;
+      transform: rotate(0) scale(1);
+    }
+
+    [data-theme="light"] .theme-toggle .sun-icon {
+      opacity: 1;
+      transform: rotate(0) scale(1);
+    }
+
+    [data-theme="light"] .theme-toggle .moon-icon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+
+    /* Resume button */
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .resume-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .badge {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent-glow);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .grid-bg {
+        background-size: 40px 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid-bg {
+        background-size: 30px 30px;
+      }
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+          rgba(99, 102, 241, 0.08) 0%,
+          transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition:
+        left 0.3s ease,
+        top 0.3s ease;
+    }
+
+    @media (pointer: coarse) {
+      .cursor-glow {
+        display: none;
+      }
+    }
+
+    /* Light mode specific overrides */
+    [data-theme="light"] .project-overlay {
+      background: linear-gradient(to top,
+          rgba(248, 249, 252, 0.95) 0%,
+          rgba(248, 249, 252, 0.5) 50%,
+          rgba(248, 249, 252, 0.3) 100%);
+    }
+
+    [data-theme="light"] .nav-glass {
+      background: rgba(248, 249, 252, 0.8);
+    }
+
+    /* ─── Pricing Card ─── */
+    .pricing-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      overflow: hidden;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 40px var(--shadow);
+    }
+
+    .pricing-card-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 2rem;
+    }
+
+    /* ─── Popular Card ─── */
+    .pricing-card--popular {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 8px 32px var(--accent-glow);
+      /* .pricing-card clips children to its rounded corners; the badge is
+     meant to straddle the top edge, so this specific card needs to
+     opt back out of that clipping without affecting the other cards. */
+      overflow: visible;
+    }
+
+    .pricing-card--popular:hover {
+      box-shadow: 0 0 0 1px var(--accent), 0 16px 48px var(--accent-glow);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    /* ─── Card Header ─── */
+    .pricing-card-header {
+      text-align: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .plan-description {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .plan-price {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .price-prefix {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* ─── Feature List ─── */
+    .pricing-card-body {
+      flex: 1;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .feature-item strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 0.125rem;
+      color: var(--accent-4);
+    }
+
+    /* ─── Card Footer / CTA ─── */
+    .pricing-card-footer {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .pricing-cta {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .pricing-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .pricing-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+    }
+
+    .pricing-cta:hover::before {
+      transform: translateX(100%);
+    }
+
+    .pricing-cta:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ─── Pricing Footer / Disclaimer ─── */
+    .pricing-footer {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .pricing-footer-text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .pricing-footer-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .pricing-footer-link:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .pricing-footer-link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* ─── Light Theme Overrides ─── */
+    [data-theme="light"] .pricing-card {
+      background: var(--surface);
+    }
+
+    [data-theme="light"] .pricing-card--popular {
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 20px var(--accent-glow);
+    }
+
+    [data-theme="light"] .pricing-card--popular:hover {
+      box-shadow: 0 0 0 1px var(--accent), 0 8px 32px var(--accent-glow);
+    }
+
+    /* ─── Reduced Motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+
+      .pricing-card,
+      .pricing-cta,
+      .pricing-footer-link {
+        transition: none;
+      }
+
+      .pricing-card:hover {
+        transform: none;
+      }
+    }
+
+    /* ─── Pricing Section ─── */
+    .pricing-section {
+      padding: 6rem 0;
+      background: var(--bg);
+      scroll-margin-top: var(--navbar-height);
+    }
+
+    .pricing-section .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .pricing-section .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .pricing-section .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .pricing-section .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ─── Box Sizing Safety (scoped to pricing section) ─── */
+    .pricing-section *,
+    .pricing-section *::before,
+    .pricing-section *::after {
+      box-sizing: border-box;
+    }
+
+    /* ─── Pricing Section Container ─── */
+    .pricing-section .container {
+      width: min(100%, 1280px);
+      margin-inline: auto;
+      padding-inline: 1.5rem;
+    }
+
+    /* ─── Pricing Grid ─── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+      align-items: stretch;
+      width: min(100%, 1100px);
+      margin-inline: auto;
+    }
+
+    /* Tablet: balanced 2 + 1 layout, Pro centered naturally */
+    @media (max-width: 1024px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-content: center;
+      }
+
+      .pricing-card[data-plan="pro"] {
+        grid-column: 1 / -1;
+        width: min(100%, calc((100% - 1.5rem) / 2));
+        max-width: none;
+        margin: 0;
+        justify-self: center;
+      }
+    }
+
+    /* Mobile: single centered column */
+    @media (max-width: 768px) {
+      .pricing-section {
+        padding: 4rem 0;
+      }
+
+      .pricing-section .container {
+        padding-inline: 1rem;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 1.25rem;
+      }
+
+      .pricing-card,
+      .pricing-card[data-plan="pro"] {
+        grid-column: auto;
+        width: 100%;
+        max-width: 480px;
+        justify-self: center;
+        margin: 0;
+      }
+    }
+
+    /* Very small screens: tighter padding, no clipping */
+    @media (max-width: 480px) {
+      .pricing-section .container {
+        padding-inline: 0.75rem;
+      }
+
+      .pricing-grid {
+        gap: 1rem;
+      }
+
+      .pricing-card-inner {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .price-amount {
+        font-size: 2.1rem;
+      }
+
+      .popular-badge {
+        max-width: calc(100% - 1.5rem);
+        text-align: center;
+      }
+    }
+
+    /* === BACK TO TOP BUTTON === */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      cursor: pointer;
+      z-index: 900;
+      box-shadow: 0 4px 30px rgba(99, 102, 241, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px) scale(1);
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
+        visibility 0.3s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .back-to-top:hover,
+    .back-to-top:focus-visible {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+    }
+
+    .back-to-top.is-visible:active {
+      transform: translateY(-2px) scale(0.95);
+    }
+
+    .back-to-top:focus-visible {
+      outline: 2px solid var(--accent-3);
+      outline-offset: 3px;
+    }
+
+    .back-to-top svg {
+      width: 22px;
+      height: 22px;
+      stroke: #fff;
+      pointer-events: none;
+    }
+
+    @media (max-width: 1024px) {
+      .back-to-top {
+        bottom: 24px;
+        right: 24px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .back-to-top {
+        width: 48px;
+        height: 48px;
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .back-to-top svg {
+        width: 19px;
+        height: 19px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .back-to-top {
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .back-to-top:hover,
+      .back-to-top:focus-visible,
+      .back-to-top.is-visible:active {
+        transform: none;
+      }
+    }
+  </style>
+  <base target="_blank" />
+  <base target="_blank" />
+</head>
+
+<body>
+  <!-- === NEW LOADING SCREEN === -->
+  <div id="loader">
+    <div class="loader-spinner">
+      <div class="loader-ring"></div>
+      <div class="loader-ring-inner"></div>
+    </div>
+    <div class="loader-progress">
+      <div class="loader-progress-bar"></div>
+    </div>
+    <p class="loader-text">Initializing experience...</p>
+  </div>
+
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- === NAVIGATION === -->
+  <nav class="nav-glass">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" target="_parent" class="text-xl font-bold tracking-tight"
+        style="z-index: 1001; position: relative">
+        <span style="color: var(--text)">Ahmed</span><span style="color: var(--accent)">.dev</span>
+      </a>
+      <div class="hidden lg:flex items-center gap-6">
+        <a href="#about" class="nav-link text-sm font-medium" style="color: var(--text-dim)">About</a>
+        <a href="#projects" class="nav-link text-sm font-medium" style="color: var(--text-dim)">Projects</a>
+        <a href="#skills" class="nav-link text-sm font-medium" style="color: var(--text-dim)">Skills</a>
+        <a href="#experience" class="nav-link text-sm font-medium" style="color: var(--text-dim)">Experience</a>
+        <a href="#pricing" class="nav-link text-sm font-medium" style="color: var(--text-dim)">Pricing</a>
+        <a href="#contact" class="nav-link text-sm font-medium" style="color: var(--text-dim)">Contact</a>
+        <a href="Ahmed_Shakoor_CV.pdf" target="_blank" class="resume-btn text-sm">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M12 15V3" />
+          </svg>
+          Resume
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="moon-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+          <svg class="sun-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+        </button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-links">
+      <a href="#about" onclick="closeMobileMenu()">About</a>
+      <a href="#projects" onclick="closeMobileMenu()">Projects</a>
+      <a href="#skills" onclick="closeMobileMenu()">Skills</a>
+      <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+      <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+      <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+    </div>
+    <div class="mobile-menu-footer">
+      <a href="Ahmed_Shakoor_CV.pdf" target="_blank" class="resume-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+          <path d="M7 10l5 5 5-5" />
+          <path d="M12 15V3" />
+        </svg>
+        Resume
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="moon-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        </svg>
+        <svg class="sun-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" />
+          <path
+            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- === HERO === -->
+  <section class="hero-section" id="home">
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto" style="padding-top: 80px">
+      <div class="flex justify-center mb-8 reveal" style="margin-top: 10px">
+        <div class="badge">
+          <span class="badge-dot"></span>Available for freelance work
+        </div>
+      </div>
+      <h1 class="hero-title mb-6 reveal">
+        Full Stack<br /><span class="gradient-text">Engineer</span>
+      </h1>
+      <p class="hero-subtitle mx-auto mb-10 reveal">
+        I build full-stack web applications using MongoDB, Express, React & Node — from database architecture to
+        pixel-perfect interfaces.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
+        <a href="#projects" class="cta-btn">View My Work<svg width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg></a>
+        <a href="#contact" class="outline-btn">Get in Touch</a>
+        <a href="Ahmed_Shakoor_CV.pdf" target="_blank" class="resume-btn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M12 15V3" />
+          </svg>
+          Resume
+        </a>
+      </div>
+      <div class="scroll-indicator">
+        <span class="text-xs font-mono" style="color: var(--text-dim)">SCROLL</span>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+          style="color: var(--text-dim)">
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- === ABOUT === -->
+  <section id="about" class="relative z-10 py-32" style="background: var(--bg)">
+    <div class="grid-bg"></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="section-label reveal">01 / About Me</span>
+          <h2 class="section-title mt-4 mb-6 reveal">
+            Building the <span style="color: var(--accent)">future</span> of
+            the web
+          </h2>
+          <p class="leading-relaxed mb-6 reveal" style="color: var(--text-dim)">
+            I'm a MERN stack developer who thrives on solving real problems with code. I build everything from scalable
+            REST APIs and database architectures to fast, intuitive React interfaces — with a focus on performance,
+            clean code, and great user experience.
+          </p>
+          <p class="leading-relaxed mb-8 reveal" style="color: var(--text-dim)">
+            Off-screen, you'll find me sketching generative art, pushing open-source forward, or sharing insights on the
+            future of the web at tech conferences.
+          </p>
+          <div class="grid grid-cols-3 gap-8 reveal">
+            <div>
+              <div class="stat-number" data-count="2+">0</div>
+              <p class="text-sm mt-1" style="color: var(--text-dim)">
+                Years Experience
+              </p>
+            </div>
+            <div>
+              <div class="stat-number" data-count="50">0</div>
+              <p class="text-sm mt-1" style="color: var(--text-dim)">
+                Projects Developed
+              </p>
+            </div>
+            <div>
+              <div class="stat-number" data-count="30">0</div>
+              <p class="text-sm mt-1" style="color: var(--text-dim)">
+                Happy Clients
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="relative reveal">
+          <div
+            class="aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-500/20 to-pink-500/20 border p-8"
+            style="border-color: var(--border)">
+            <div class="w-full h-full rounded-2xl flex items-center justify-center relative overflow-hidden"
+              style="background: var(--surface)">
+              <div class="font-mono text-xs leading-relaxed p-8" style="color: var(--text-muted)">
+                <span style="color: var(--accent-2)">const</span>
+                <span style="color: var(--accent)">developer</span> = {<br />
+                &nbsp;&nbsp;<span style="color: #22c55e">name</span>:
+                <span style="color: #eab308">"AHMED SHAKOOR"</span>,<br />
+                &nbsp;&nbsp;<span style="color: #22c55e">role</span>:
+                <span style="color: #eab308">"Software Engineer"</span>,<br />
+                &nbsp;&nbsp;<span style="color: #22c55e">passion</span>:
+                <span style="color: #eab308">"Full Stack Development"</span>,<br />
+                &nbsp;&nbsp;<span style="color: #22c55e">location</span>:
+                <span style="color: #eab308">"SDK-Pakistan"</span>,<br />
+                &nbsp;&nbsp;<span style="color: #22c55e">coffee</span>:
+                <span style="color: #eab308">"Always"</span><br />
+                };
+              </div>
+              <div
+                class="absolute top-4 right-4 w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 opacity-20 blur-xl">
+              </div>
+              <div
+                class="absolute bottom-8 left-8 w-24 h-24 rounded-full bg-gradient-to-br from-pink-500 to-orange-500 opacity-20 blur-xl">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === PROJECTS === -->
+
+  <section id="projects" class="relative z-10 py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-20">
+        <span class="section-label reveal">02 / Selected Work</span>
+        <h2 class="section-title mt-4 reveal">Future Projects</h2>
+        <p class="mt-4 max-w-2xl mx-auto reveal" style="color: var(--text-dim)">
+          A curated selection of projects that showcase my expertise in web
+          experiences, interactive design, and modern frontend engineering.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Project 1 -->
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=400&fit=crop"
+            alt="Nebula Studio" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: var(--accent)">Three.js / WebGL</span>
+            <h3 class="text-xl font-bold mb-2">Nebula Studio</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Interactive 3D product configurator with real-time rendering
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: var(--accent)">Three.js / WebGL</span>
+            <h3 class="text-lg font-bold mt-2">Nebula Studio</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              3D Product Configurator
+            </p>
+          </div>
+        </div>
+        <!-- Project 2 -->
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" alt="DataViz Pro" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: var(--accent-3)">React / D3.js</span>
+            <h3 class="text-xl font-bold mb-2">DataViz Pro</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Real-time data visualization dashboard for enterprise analytics
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: var(--accent-3)">React / D3.js</span>
+            <h3 class="text-lg font-bold mt-2">DataViz Pro</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              Analytics Dashboard
+            </p>
+          </div>
+        </div>
+        <!-- Project 3 -->
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=400&fit=crop"
+            alt="Aurora Commerce" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: var(--accent-2)">Next.js / GSAP</span>
+            <h3 class="text-xl font-bold mb-2">Aurora Commerce</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Immersive e-commerce experience with scroll-driven animations
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: var(--accent-2)">Next.js / GSAP</span>
+            <h3 class="text-lg font-bold mt-2">Aurora Commerce</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              E-commerce Platform
+            </p>
+          </div>
+        </div>
+        <!-- Project 4 -->
+        <div class="project-card reveal">
+          <img
+            src="https://cdn.pixabay.com/photo/2019/11/17/07/51/artificial-intelligence-4631712_1280.jpg?w=600&h=400&fit=crop"
+            alt="Zenith VR" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: #22c55e">Vue.js / Three.js</span>
+            <h3 class="text-xl font-bold mb-2">Zenith VR</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Web-based VR experience for architectural visualization
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: #22c55e">Vue.js / Three.js</span>
+            <h3 class="text-lg font-bold mt-2">Zenith VR</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              Virtual Reality Experience
+            </p>
+          </div>
+        </div>
+        <!-- Project 5 -->
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop"
+            alt="Pulse Fitness" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: #f97316">React Native / Node</span>
+            <h3 class="text-xl font-bold mb-2">Pulse Fitness</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Cross-platform fitness app with AI-powered workout
+              recommendations
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: #f97316">React Native / Node</span>
+            <h3 class="text-lg font-bold mt-2">Pulse Fitness</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              Mobile Fitness App
+            </p>
+          </div>
+        </div>
+        <!-- Project 6 -->
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=600&h=400&fit=crop"
+            alt="Cosmos AI" />
+          <div class="project-overlay">
+            <span class="text-xs font-mono mb-2" style="color: #a855f7">Svelte / WebGPU</span>
+            <h3 class="text-xl font-bold mb-2">Cosmos AI</h3>
+            <p class="text-sm mb-4" style="color: var(--text-dim)">
+              Generative AI art platform with real-time GPU rendering
+            </p>
+            <a href="#" class="text-sm font-medium hover:opacity-80 transition" style="color: var(--text)">View Project
+              -></a>
+          </div>
+          <div class="project-info">
+            <span class="text-xs font-mono" style="color: #a855f7">Svelte / WebGPU</span>
+            <h3 class="text-lg font-bold mt-2">Cosmos AI</h3>
+            <p class="text-sm mt-1" style="color: var(--text-dim)">
+              Generative AI Platform
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SKILLS === -->
+  <section id="skills" class="relative z-10 py-32" style="background: var(--bg)">
+    <div class="grid-bg"></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-20">
+        <span class="section-label reveal">03 / Expertise</span>
+        <h2 class="section-title mt-4 reveal">Skills & Technologies</h2>
+        <p class="mt-4 max-w-2xl mx-auto reveal" style="color: var(--text-dim)">
+          My toolkit spans the full spectrum of modern web development, from
+          low-level graphics programming to high-level framework architecture.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card-3d reveal">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: var(--accent-glow)">
+            <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold mb-3">Frontend Engineering</h3>
+          <p class="text-sm mb-6" style="color: var(--text-dim)">
+            Building scalable, performant user interfaces with modern
+            frameworks and best practices.
+          </p>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>React / Next.js</span><span class="font-mono" style="color: var(--text-dim)">95%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="95"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>JavaScript / TypeScript</span><span class="font-mono" style="color: var(--text-dim)">94%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="94"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Tailwind CSS / Bootstrap</span><span class="font-mono" style="color: var(--text-dim)">97%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="97"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>HTML5 / CSS3</span><span class="font-mono" style="color: var(--text-dim)">99%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="99"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-3d reveal">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(6, 182, 212, 0.1)">
+            <svg width="24" height="24" fill="none" stroke="#06b6d4" stroke-width="2" viewBox="0 0 24 24">
+              <path
+                d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold mb-3">Backend & DevOps</h3>
+          <p class="text-sm mb-6" style="color: var(--text-dim)">
+            Designing robust APIs, databases, and deployment pipelines for
+            production scale.
+          </p>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Node.js / Express</span><span class="font-mono" style="color: var(--text-dim)">90%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="90"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>PostgreSQL / MongoDB</span><span class="font-mono" style="color: var(--text-dim)">92%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="92"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Docker</span><span class="font-mono" style="color: var(--text-dim)">82%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="82"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>AWS / Vercel</span><span class="font-mono" style="color: var(--text-dim)">88%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="88"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-3d reveal">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(236, 72, 153, 0.1)">
+            <svg width="24" height="24" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24">
+              <path
+                d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+              <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold mb-3">Tools & Software</h3>
+          <p class="text-sm mb-6" style="color: var(--text-dim)">
+            Creating immersive 3D experiences with WebGL, shaders, and
+            real-time rendering.
+          </p>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Visual Studio Code</span><span class="font-mono" style="color: var(--text-dim)">99%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="99"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Git and GitHub</span><span class="font-mono" style="color: var(--text-dim)">92%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="92"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Vercel and Netlify</span><span class="font-mono" style="color: var(--text-dim)">93%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="93"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span>Render and Railway</span><span class="font-mono" style="color: var(--text-dim)">94%</span>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-fill" data-width="94"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 flex flex-wrap justify-center gap-3 reveal">
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">HTML5</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">CSS3</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Javascript</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">React</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Next.js</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Tailwind CSS</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">TypeScript</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Node.js</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Express.js</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">MongoDB</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">MySQL</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">VScode</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Git</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">GitHub</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Netlify</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Vercel</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Render</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Railway</span>
+        <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Wordpress</span>
+            <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">Elementor</span>
+            <span class="px-4 py-2 rounded-full text-sm font-mono" style="
+              background: var(--surface);
+              border: 1px solid var(--border);
+              color: var(--text-dim);
+            ">WooCommerce</span>
+      </div>
+    </div>
+  </section>
+  <!-- === EXPERIENCE === -->
+  <section id="experience" class="relative z-10 py-32">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-20">
+        <span class="section-label reveal">04 / Professional Journey</span>
+        <h2 class="section-title mt-4 reveal">Work Experience</h2>
+        <p class="mt-4 max-w-2xl mx-auto reveal" style="color: var(--text-dim)">
+          A timeline of my professional journey, from junior developer to
+          leading creative engineering teams.
+        </p>
+      </div>
+      <div class="relative pl-8 md:pl-12">
+        <div class="timeline-line"></div>
+        <div class="relative pb-16 reveal">
+          <div class="timeline-dot" style="top: 6px"></div>
+          <div class="ml-6 md:ml-8">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <h3 class="text-xl font-bold">AI Specialist Full Stack Developer</h3>
+              <span class="text-sm font-mono" style="color: var(--accent)">2026 - Present</span>
+            </div>
+            <p class="mb-1 font-medium" style="color: var(--text-dim)">
+              Nebula Interactive
+            </p>
+            <p class="text-sm leading-relaxed" style="color: var(--text-muted)">
+              Architected robust full-stack MERN applications by leveraging Claude Code and Cursor AI to accelerate
+              feature deployment, reducing development time by up to 45%. Applied advanced prompt engineering workflows
+              to seamlessly integrate intelligent AI models into web solutions, boosting customer engagement by 30%.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="text-xs px-3 py-1 rounded-full font-mono"
+                style="background: var(--accent-glow); color: var(--accent)">Claude Code</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono"
+                style="background: var(--accent-glow); color: var(--accent)">Prompt Engineering</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono"
+                style="background: var(--accent-glow); color: var(--accent)">Cursor AI</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono"
+                style="background: var(--accent-glow); color: var(--accent)">MERN Specialist</span>
+            </div>
+          </div>
+        </div>
+        <div class="relative pb-16 reveal">
+          <div class="timeline-dot" style="top: 6px; background: var(--accent-2)"></div>
+          <div class="ml-6 md:ml-8">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <h3 class="text-xl font-bold">Backend Engineer</h3>
+              <span class="text-sm font-mono" style="color: var(--accent-2)">2024 - 2025</span>
+            </div>
+            <p class="mb-1 font-medium" style="color: var(--text-dim)">
+              Pixel Studios
+            </p>
+            <p class="text-sm leading-relaxed" style="color: var(--text-muted)">
+              Developed robust full-stack applications leveraging Node.js, Express.js, and TypeScript to architect
+              high-performance REST APIs. Implemented secure data modeling and optimized query performance within
+              MongoDB databases. Integrated dynamic frontend interfaces using React.js to ensure seamless end-to-end
+              user experiences.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">React.js</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">Node.js</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">REST API</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">TypeScript</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">Express.js</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(236, 72, 153, 0.1);
+                    color: var(--accent-2);
+                  ">MongoDB</span>
+            </div>
+          </div>
+        </div>
+        <div class="relative pb-16 reveal">
+          <div class="timeline-dot" style="top: 6px; background: var(--accent-3)"></div>
+          <div class="ml-6 md:ml-8">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <h3 class="text-xl font-bold">Frontend Engineer</h3>
+              <span class="text-sm font-mono" style="color: var(--accent-3)">2023 - 2024</span>
+            </div>
+            <p class="mb-1 font-medium" style="color: var(--text-dim)">
+              TechFlow Agency
+            </p>
+            <p class="text-sm leading-relaxed" style="color: var(--text-muted)">
+              Engineered responsive web applications using JavaScript, HTML5, and CSS3 to deliver seamless user
+              experiences. Styled pixel-perfect layouts using Tailwind CSS and Bootstrap while managing version control
+              via Git.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">HTML5</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">CSS3</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">JavaScript</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">Git</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">Bootstrap</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-3);
+                  ">Tailwind CSS</span>
+            </div>
+          </div>
+        </div>
+        <div class="relative reveal">
+          <div class="timeline-dot" style="top: 6px; background: #22c55e"></div>
+          <div class="ml-6 md:ml-8">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <h3 class="text-xl font-bold">WordPress Developer</h3>
+              <span class="text-sm font-mono" style="color: #22c55e">2022 - 2023</span>
+            </div>
+            <p class="mb-1 font-medium" style="color: var(--text-dim)">
+              Digital Craft
+            </p>
+            <p class="text-sm leading-relaxed" style="color: var(--text-muted)">
+              Started my professional journey building responsive websites and
+              learning WordPress development. Developed over 20+ projects in
+              my first year.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-4);
+                  ">WordPress</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-4);
+                  ">Elementor</span>
+              <span class="text-xs px-3 py-1 rounded-full font-mono" style="
+                    background: rgba(6, 182, 212, 0.1);
+                    color: var(--accent-4);
+                  ">WooCommerce</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === TESTIMONIALS === -->
+  <section class="relative z-10 py-32" style="background: var(--bg)">
+    <div class="grid-bg"></div>
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-20">
+        <span class="section-label reveal">05 / Testimonials</span>
+        <h2 class="section-title mt-4 reveal">What Clients Say</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="testimonial-card reveal">
+          <p class="leading-relaxed mb-6 relative z-10" style="color: var(--text-dim)">
+            "Ahmed transformed our vision into a breathtaking 3D experience.
+            The attention to detail and technical expertise exceeded all
+            expectations. Our conversion rate increased by 45%."
+          </p>
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face"
+              alt="Sarah" class="w-12 h-12 rounded-full object-cover" />
+            <div>
+              <p class="font-semibold">Sarah Mitchell</p>
+              <p class="text-sm" style="color: var(--text-dim)">
+                CEO, Nebula Studio
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <p class="leading-relaxed mb-6 relative z-10" style="color: var(--text-dim)">
+            "Working with Ahmed was a game-changer. The interactive dashboard
+            he built handles millions of data points with buttery-smooth
+            performance. Truly world-class engineering."
+          </p>
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+              alt="James" class="w-12 h-12 rounded-full object-cover" />
+            <div>
+              <p class="font-semibold">James Rodriguez</p>
+              <p class="text-sm" style="color: var(--text-dim)">
+                CTO, DataViz Pro
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <p class="leading-relaxed mb-6 relative z-10" style="color: var(--text-dim)">
+            "The most talented developer I have worked with. Ahmed does not
+            just write code — he crafts experiences. Our brand has never
+            looked better online."
+          </p>
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
+              alt="Emily" class="w-12 h-12 rounded-full object-cover" />
+            <div>
+              <p class="font-semibold">Emily Chen</p>
+              <p class="text-sm" style="color: var(--text-dim)">
+                Director, Aurora Commerce
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="pricing" class="section pricing-section" aria-labelledby="pricing-heading">
+    <div class="container">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <span class="section-label">06 / Pricing</span>
+        <h2 id="pricing-heading" class="section-title">Simple, transparent pricing</h2>
+        <p class="section-subtitle">Website development packages designed to fit your goals and timeline.</p>
+      </div>
+
+      <!-- Pricing Cards Grid -->
+      <div class="pricing-grid">
+
+        <!-- Plan 1: Startup -->
+        <article class="pricing-card" data-plan="startup">
+          <div class="pricing-card-inner">
+            <div class="pricing-card-header">
+              <h3 class="plan-name">Startup</h3>
+              <p class="plan-description">Fast and affordable essentials for small businesses &amp; MVPs.</p>
+              <div class="plan-price">
+                <span class="price-prefix">Starting at</span>
+                <span class="price-amount">$69</span>
+              </div>
+            </div>
+            <div class="pricing-card-body">
+              <ul class="feature-list" role="list">
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Up to <strong>3</strong> pages</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Responsive design</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Mobile, tablet &amp; desktop</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Delivery within 2 days</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Basic SEO setup</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Contact form integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Social media links</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Performance optimization</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Cross-browser compatibility</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>1 revision round</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Free support for 1 week</strong></span>
+                </li>
+              </ul>
+            </div>
+            <div class="pricing-card-footer">
+              <a href="#contact" class="btn btn-primary pricing-cta">Get Started</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Plan 2: Enterprise (Most Popular) -->
+        <article class="pricing-card pricing-card--popular" data-plan="enterprise">
+          <div class="popular-badge" aria-hidden="true">Most Popular</div>
+          <div class="pricing-card-inner">
+            <div class="pricing-card-header">
+              <h3 class="plan-name">Enterprise</h3>
+              <p class="plan-description">A complete website solution for established businesses.</p>
+              <div class="plan-price">
+                <span class="price-prefix">Starting at</span>
+                <span class="price-amount">$129</span>
+              </div>
+            </div>
+            <div class="pricing-card-body">
+              <ul class="feature-list" role="list">
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Up to <strong>5</strong> pages</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Responsive design</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Mobile, tablet &amp; desktop</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Delivery within 4 days</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Modern UI implementation</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Advanced</strong> SEO setup</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Contact form integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Social media integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Performance optimization</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Cross-browser compatibility</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Deployment assistance</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>2 revision rounds</strong></span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Free 24/7 support</strong></span>
+                </li>
+              </ul>
+            </div>
+            <div class="pricing-card-footer">
+              <a href="#contact" class="btn btn-primary pricing-cta">Get Started</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Plan 3: Pro -->
+        <article class="pricing-card" data-plan="pro">
+          <div class="pricing-card-inner">
+            <div class="pricing-card-header">
+              <h3 class="plan-name">Pro</h3>
+              <p class="plan-description">Larger, customized websites with premium support.</p>
+              <div class="plan-price">
+                <span class="price-prefix">Starting at</span>
+                <span class="price-amount">$199</span>
+              </div>
+            </div>
+            <div class="pricing-card-body">
+              <ul class="feature-list" role="list">
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Up to <strong>7</strong> pages</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Responsive design</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Mobile, tablet &amp; desktop</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Delivery within 5 days</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Custom</strong> UI implementation</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Advanced</strong> SEO setup</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Contact form integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Social media integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Performance optimization</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Cross-browser compatibility</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Analytics</strong> integration</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span>Deployment assistance</span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Custom interactions &amp; animations</strong></span>
+                </li>
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>3 revision rounds</strong></span>
+                </li>
+                <!-- <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Priority support</strong></span>
+                </li> -->
+                <li class="feature-item">
+                  <span class="feature-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8L6.5 11.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span><strong>Free 24/7 support</strong></span>
+                </li>
+              </ul>
+            </div>
+            <div class="pricing-card-footer">
+              <a href="#contact" class="btn btn-primary pricing-cta">Get Started</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Custom Scope Disclaimer -->
+      <div class="pricing-footer">
+        <p class="pricing-footer-text">Need something custom? Every project is different. If your requirements don't fit
+          these plans, <a href="#contact" class="pricing-footer-link">let's discuss a tailored solution</a>.</p>
+      </div>
+
+    </div>
+  </section>
+  <!-- === CONTACT === -->
+  <section id="contact" class="relative z-10 py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-16">
+        <div>
+          <span class="section-label reveal">07 / Contact</span>
+          <h2 class="section-title mt-4 mb-6 reveal">
+            Let's Build Something
+            <span style="color: var(--accent)">Amazing</span>
+          </h2>
+          <p class="leading-relaxed mb-10 reveal" style="color: var(--text-dim)">
+            Have a project in mind? I am always excited to collaborate on
+            innovative digital experiences. Whether it is a Business website, Landing page, an
+            interactive dashboard, or a complete digital transformation —
+            let's make it happen.
+          </p>
+          <div class="space-y-6 reveal">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: var(--accent-glow)">
+                <svg width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <path d="M22 6l-10 7L2 6" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm" style="color: var(--text-dim)">Email</p>
+                <p class="font-medium">ahmedshakoor373352623@gmail.com</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                style="background: rgba(236, 72, 153, 0.1)">
+                <svg width="20" height="20" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm" style="color: var(--text-dim)">Location</p>
+                <p class="font-medium">SDK Punjab, Pakistan</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                style="background: rgba(6, 182, 212, 0.1)">
+                <svg width="20" height="20" fill="none" stroke="#06b6d4" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <path
+                    d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm" style="color: var(--text-dim)">
+                  Availability
+                </p>
+                <p class="font-medium">Open for Remote</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-3 mt-10 reveal">
+            <a href="https://github.com/ahmed-shakoor" class="social-icon" aria-label="GitHub"><svg width="20"
+                height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg></a>
+            <a href="https://www.linkedin.com/in/ahmed-shakoor-engr/" class="social-icon" aria-label="LinkedIn"><svg
+                width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg></a>
+            <a href="https://x.com/ahmedshakoor373" class="social-icon" aria-label="Twitter"><svg width="20" height="20"
+                fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg></a>
+            <a href="https://dribbble.com/ahmedshakoor373352623" class="social-icon" aria-label="Dribbble"><svg
+                width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0C5.372 0 0 5.373 0 12s5.372 12 12 12 12-5.373 12-12S18.628 0 12 0zm9.885 11.441c-2.575-.422-4.943-.445-7.103-.073a42153.912 42.153.912 0 00-.767-1.68c2.31-1 4.165-2.358 5.548-4.082a9.863 9.863 0 012.322 5.835zm-3.842-7.282c-1.205 1.554-2.868 2.783-4.986 3.68a46.287 46.287 0 00-3.488-5.438A9.894 9.894 0 0112 2.087c2.275 0 4.368.779 6.043 2.072zM7.527 3.166a44.59 44.59 0 013.537 5.381c-2.43.715-5.331 1.082-8.684 1.105a9.931 9.931 0 015.147-6.486zM2.087 12l.013-.256c3.849-.005 7.169-.448 9.95-1.322.233.475.456.952.67 1.432-3.38 1.057-6.165 3.222-8.337 6.48A9.865 9.865 0 012.087 12zm3.829 7.81c1.969-3.088 4.482-5.098 7.598-6.027a39.137 39.137 0 012.043 7.46c-3.349 1.291-6.953.666-9.641-1.433zm11.586.43a41.098 41.098 0 00-1.92-6.897c1.876-.265 3.94-.196 6.199.196a9.923 9.923 0 01-4.279 6.701z" />
+              </svg></a>
+          </div>
+        </div>
+        <div class="reveal">
+          <form class="space-y-6" id="contactForm" novalidate>
+            <!-- Honeypot field: hidden from real visitors, bots often fill it in -->
+            <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-2" style="color: var(--text-dim)" for="cf-name">Name</label>
+                <input type="text" id="cf-name" name="name" class="form-input" placeholder="John Doe" required />
+                <p class="form-error text-sm mt-2" id="cf-name-error" style="color: #ef4444; display: none;"></p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2" style="color: var(--text-dim)" for="cf-email">Email</label>
+                <input type="email" id="cf-email" name="email" class="form-input" placeholder="john@example.com" required />
+                <p class="form-error text-sm mt-2" id="cf-email-error" style="color: #ef4444; display: none;"></p>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: var(--text-dim)" for="cf-subject">Subject</label>
+              <input type="text" id="cf-subject" name="subject" class="form-input" placeholder="Project Inquiry" required />
+              <p class="form-error text-sm mt-2" id="cf-subject-error" style="color: #ef4444; display: none;"></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2" style="color: var(--text-dim)" for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" class="form-input" rows="5" placeholder="Tell me about your project..." required></textarea>
+              <p class="form-error text-sm mt-2" id="cf-message-error" style="color: #ef4444; display: none;"></p>
+            </div>
+            <button type="submit" id="cf-submit-btn" class="cta-btn w-full justify-center">
+              <span id="cf-btn-text">Send Message</span>
+              <svg id="cf-btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+              </svg>
+              <svg id="cf-btn-spinner" width="18" height="18" viewBox="0 0 24 24" style="display:none; animation: cfSpin 0.8s linear infinite;">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" fill="none" opacity="0.25" />
+                <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" />
+              </svg>
+            </button>
+            <div id="cf-status" role="status" aria-live="polite" style="display:none; border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.9rem; line-height: 1.5;"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === FOOTER === -->
+  <footer class="relative z-10 py-12" style="border-top: 1px solid var(--border)">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="text-center md:text-left">
+          <a href="index.html" target="_parent" class="text-xl font-bold tracking-tight"><span style="color: var(--text)">Ahmed</span><span
+              style="color: var(--accent)">.dev</span></a>
+          <p class="text-sm mt-2" style="color: var(--text-dim)">
+            Crafting digital experiences since 2022
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <a href="#about" class="footer-link text-sm">About</a>
+          <a href="#projects" class="footer-link text-sm">Projects</a>
+          <a href="#skills" class="footer-link text-sm">Skills</a>
+          <a href="#experience" class="footer-link text-sm">Experience</a>
+          <a href="#pricing" class="footer-link text-sm">Pricing</a>
+          <a href="#contact" class="footer-link text-sm">Contact</a>
+        </div>
+        <p class="text-sm font-mono" style="color: var(--text-muted)">
+          (c) 2026 Ahmed Shakoor. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- === BACK TO TOP BUTTON === -->
+  <button type="button" id="backToTop" class="back-to-top" aria-label="Back to Top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+      stroke-linejoin="round">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+
+  <script>
+    // // === LOADER ANIMATION ===
+    let currentFrame = 0;
+    const loaderImg = document.getElementById("loader-img");
+    let loaderInterval;
+
+    function startLoaderAnimation() {
+      loaderInterval = setInterval(() => {
+        loaderImg.src = LOADER_FRAMES[currentFrame];
+        currentFrame = (currentFrame + 1) % LOADER_FRAMES.length;
+      }, 100);
+    }
+
+    startLoaderAnimation();
+
+    // === THREE.JS 3D BACKGROUND ===
+    const canvas = document.getElementById("hero-canvas");
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 200;
+    const posArray = new Float32Array(particlesCount * 3);
+    for (let i = 0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 15;
+    }
+    particlesGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(posArray, 3),
+    );
+
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.02,
+      color: 0x6366f1,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+    });
+    const particlesMesh = new THREE.Points(
+      particlesGeometry,
+      particlesMaterial,
+    );
+    scene.add(particlesMesh);
+
+    const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+    const wireframe = new THREE.WireframeGeometry(geometry);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x6366f1,
+      transparent: true,
+      opacity: 0.15,
+    });
+    const icosahedron = new THREE.LineSegments(wireframe, lineMaterial);
+    scene.add(icosahedron);
+
+    const sphereGeo = new THREE.SphereGeometry(0.8, 32, 32);
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: 0x6366f1,
+      transparent: true,
+      opacity: 0.05,
+      wireframe: true,
+    });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    scene.add(sphere);
+
+    camera.position.z = 4;
+
+    let mouseX = 0,
+      mouseY = 0;
+    document.addEventListener("mousemove", (e) => {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      particlesMesh.rotation.y += 0.001;
+      particlesMesh.rotation.x += 0.0005;
+      icosahedron.rotation.y += 0.003;
+      icosahedron.rotation.x += 0.001;
+      sphere.rotation.y -= 0.002;
+      sphere.rotation.x -= 0.001;
+      icosahedron.rotation.y += mouseX * 0.01;
+      icosahedron.rotation.x += mouseY * 0.01;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // === GSAP SCROLL ANIMATIONS ===
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray(".reveal").forEach((el) => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      });
+    });
+
+    gsap.utils.toArray(".skill-fill").forEach((bar) => {
+      gsap.to(bar, {
+        width: bar.dataset.width + "%",
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: { trigger: bar, start: "top 90%" },
+      });
+    });
+
+    gsap.utils.toArray(".stat-number").forEach((el) => {
+      const target = parseInt(el.dataset.count);
+      gsap.to(el, {
+        innerText: target,
+        duration: 2,
+        snap: { innerText: 1 },
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%" },
+      });
+    });
+
+    // === MOBILE MENU ===
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      mobileMenu.classList.toggle("active");
+    });
+
+    function closeMobileMenu() {
+      hamburger.classList.remove("active");
+      mobileMenu.classList.remove("active");
+    }
+
+    // === CURSOR GLOW ===
+    const cursorGlow = document.getElementById("cursorGlow");
+    document.addEventListener("mousemove", (e) => {
+      cursorGlow.style.left = e.clientX + "px";
+      cursorGlow.style.top = e.clientY + "px";
+    });
+
+    // === LOADING SCREEN ===
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loader").classList.add("hidden");
+        clearInterval(loaderInterval);
+      }, 2500);
+    });
+
+    // === DARK/LIGHT THEME TOGGLE ===
+    const themeToggle = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    // Check saved preference
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    html.setAttribute("data-theme", savedTheme);
+
+    function toggleTheme() {
+      const current = html.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener("click", toggleTheme);
+    }
+  </script>
+
+  <script>
+    // === SMOOTH SCROLL FOR ALL ANCHOR LINKS ===
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href");
+        if (targetId === "#") return;
+
+        const target = document.querySelector(targetId);
+        if (target) {
+          // Close mobile menu if open
+          const mobileMenu = document.getElementById("mobileMenu");
+          const hamburger = document.getElementById("hamburger");
+          if (mobileMenu && mobileMenu.classList.contains("active")) {
+            mobileMenu.classList.remove("active");
+            hamburger.classList.remove("active");
+          }
+
+          // GSAP smooth scroll
+          gsap.to(window, {
+            duration: 1.2,
+            scrollTo: { y: target, offsetY: 80 },
+            ease: "power3.inOut",
+          });
+        }
+      });
+    });
+
+    // === LOADER HIDE ===
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loader").classList.add("hidden");
+      }, 1500);
+    });
+  </script>
+
+  <!-- === BACK TO TOP BUTTON LOGIC === -->
+  <script>
+    (function () {
+      const backToTopBtn = document.getElementById("backToTop");
+      if (!backToTopBtn) return;
+
+      const SHOW_AFTER_PX = 300;
+      let ticking = false;
+
+      function updateVisibility() {
+        const shouldShow = window.scrollY > SHOW_AFTER_PX;
+        backToTopBtn.classList.toggle("is-visible", shouldShow);
+        ticking = false;
+      }
+
+      function onScroll() {
+        if (!ticking) {
+          window.requestAnimationFrame(updateVisibility);
+          ticking = true;
+        }
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      // Set correct state on load (e.g. page refreshed mid-scroll)
+      updateVisibility();
+
+      backToTopBtn.addEventListener("click", function () {
+        if (typeof gsap !== "undefined" && gsap.to) {
+          // Reuse the same GSAP smooth scroll used elsewhere on the page
+          gsap.to(window, {
+            duration: 1.2,
+            scrollTo: { y: 0 },
+            ease: "power3.inOut",
+          });
+        } else if ("scrollBehavior" in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          // Fallback for browsers without native smooth scroll support
+          const scrollStep = -window.scrollY / (500 / 15);
+          const scrollInterval = setInterval(function () {
+            if (window.scrollY !== 0) {
+              window.scrollBy(0, scrollStep);
+            } else {
+              clearInterval(scrollInterval);
+            }
+          }, 15);
+        }
+      });
+
+      // Keyboard accessibility: activate on Enter/Space (native <button> already
+      // supports this, but we ensure focus styles are visible on keyboard use)
+      backToTopBtn.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          backToTopBtn.click();
+        }
+      });
+    })();
+  </script>
+
+  <!-- === CONTACT FORM (real submission) === -->
+  <script>
+    (function () {
+      // Public form endpoint from your form backend (e.g. Formspree "https://formspree.io/f/xxxxxxx").
+      // This ID is meant to be public/client-side — it is NOT a secret key, so it is safe to keep here.
+      // Replace it with your own endpoint before deploying. See the notes shared with this change
+      // for how to get one and how to swap in a different backend if you prefer.
+      const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/mrpzzyng";
+
+      const form = document.getElementById("contactForm");
+      if (!form) return;
+
+      const submitBtn = document.getElementById("cf-submit-btn");
+      const btnText = document.getElementById("cf-btn-text");
+      const btnIcon = document.getElementById("cf-btn-icon");
+      const btnSpinner = document.getElementById("cf-btn-spinner");
+      const statusBox = document.getElementById("cf-status");
+
+      const fields = {
+        name: document.getElementById("cf-name"),
+        email: document.getElementById("cf-email"),
+        subject: document.getElementById("cf-subject"),
+        message: document.getElementById("cf-message"),
+      };
+
+      const errors = {
+        name: document.getElementById("cf-name-error"),
+        email: document.getElementById("cf-email-error"),
+        subject: document.getElementById("cf-subject-error"),
+        message: document.getElementById("cf-message-error"),
+      };
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let isSubmitting = false;
+
+      function clearFieldError(key) {
+        fields[key].classList.remove("cf-invalid");
+        errors[key].style.display = "none";
+        errors[key].textContent = "";
+      }
+
+      function setFieldError(key, message) {
+        fields[key].classList.add("cf-invalid");
+        errors[key].textContent = message;
+        errors[key].style.display = "block";
+      }
+
+      function clearAllErrors() {
+        Object.keys(fields).forEach(clearFieldError);
+      }
+
+      function hideStatus() {
+        statusBox.style.display = "none";
+        statusBox.classList.remove("cf-success", "cf-error");
+        statusBox.innerHTML = "";
+      }
+
+      function showStatus(type, html) {
+        statusBox.style.display = "block";
+        statusBox.classList.remove("cf-success", "cf-error");
+        statusBox.classList.add(type === "success" ? "cf-success" : "cf-error");
+        statusBox.innerHTML = html;
+      }
+
+      function validate() {
+        clearAllErrors();
+        let valid = true;
+
+        if (!fields.name.value.trim()) {
+          setFieldError("name", "Name cannot be empty.");
+          valid = false;
+        }
+
+        const emailVal = fields.email.value.trim();
+        if (!emailVal) {
+          setFieldError("email", "Email is required.");
+          valid = false;
+        } else if (!emailRegex.test(emailVal)) {
+          setFieldError("email", "Please enter a valid email address.");
+          valid = false;
+        }
+
+        if (!fields.subject.value.trim()) {
+          setFieldError("subject", "Subject is required.");
+          valid = false;
+        }
+
+        if (!fields.message.value.trim()) {
+          setFieldError("message", "Message cannot be empty.");
+          valid = false;
+        }
+
+        return valid;
+      }
+
+      // Clear a field's error as soon as the visitor starts fixing it.
+      Object.keys(fields).forEach((key) => {
+        fields[key].addEventListener("input", () => clearFieldError(key));
+      });
+
+      function setLoading(loading) {
+        isSubmitting = loading;
+        submitBtn.disabled = loading;
+        btnText.textContent = loading ? "Sending..." : "Send Message";
+        btnIcon.style.display = loading ? "none" : "inline-block";
+        btnSpinner.style.display = loading ? "inline-block" : "none";
+      }
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if (isSubmitting) return;
+
+        hideStatus();
+
+        if (!validate()) {
+          return;
+        }
+
+        // Honeypot: if this hidden field got filled in, it was almost certainly a bot.
+        // Pretend success without actually sending anything.
+        const honeypot = document.getElementById("company");
+        if (honeypot && honeypot.value.trim() !== "") {
+          form.reset();
+          showStatus(
+            "success",
+            "✓ <strong>Message sent successfully!</strong><br>I'll get back to you as soon as possible."
+          );
+          return;
+        }
+
+        setLoading(true);
+
+        const payload = {
+          name: fields.name.value.trim(),
+          email: fields.email.value.trim(),
+          subject: fields.subject.value.trim(),
+          message: fields.message.value.trim(),
+          _replyto: fields.email.value.trim(),
+        };
+
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000);
+
+          const response = await fetch(CONTACT_FORM_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeout);
+
+          if (response.ok) {
+            form.reset();
+            clearAllErrors();
+            showStatus(
+              "success",
+              "✓ <strong>Message sent successfully!</strong><br>I'll get back to you as soon as possible."
+            );
+          } else {
+            let serverMessage = "";
+            try {
+              const data = await response.json();
+              if (data && Array.isArray(data.errors)) {
+                serverMessage = data.errors.map((e) => e.message).join(" ");
+              }
+            } catch (parseErr) {
+              // ignore, fall back to generic message below
+            }
+            showStatus(
+              "error",
+              "Unable to send your message right now.<br>Please try again or contact me directly by email." +
+                (serverMessage ? "<br><span style='opacity:0.8;font-size:0.85em;'>" + serverMessage + "</span>" : "")
+            );
+          }
+        } catch (err) {
+          showStatus(
+            "error",
+            "Unable to send your message right now.<br>Please try again or contact me directly by email."
+          );
+        } finally {
+          setLoading(false);
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
